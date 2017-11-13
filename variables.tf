@@ -46,20 +46,9 @@ variable "private_subnets" {
   description = "List of subnets to launch instances into"
 }
 
-variable "private_alb_arn" {
-  description = "The ALB to serve the admin interface"
-}
-
-variable "private_alb_sg" {
-  description = "The security group of the private ALB"
-}
-
-variable "public_alb_arn" {
-  description = "The ALB that is exposed to the internet"
-}
-
-variable "public_alb_sg" {
-  description = "The security group of the public ALB"
+variable "target_groups" {
+  description = "The target groups to connect to"
+  type        = "list"
 }
 
 /* variable "zone_id_internal" {
