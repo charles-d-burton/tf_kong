@@ -1,93 +1,3 @@
-#Load the launch config with the templated userdata to start kong
-resource "aws_launch_configuration" "kong_lc" {
-  name_prefix     = "${var.tag_name}-"
-  image_id        = "${lookup(var.ami, var.region)}"
-  instance_type   = "${var.instance_type}"
-  security_groups = ["${aws_security_group.kong_instances.id}"]
-  user_data       = "${data.template_file.kong_config.rendered}"
-  key_name        = "${var.key_name}"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-#Define the security group for the public load balancer
-resource "aws_security_group" "kong_alb_external" {
-  name        = "${var.tag_name}_alb_external"
-  description = "Security group to allow general inbound access from the internet"
-  vpc_id      = "${var.vpc_id}"
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # This is for outbound internet access
-  egress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-#Internal load balancer security group configs
-resource "aws_security_group" "kong_alb_internal" {
-  name        = "${var.tag_name}_alb_internal"
-  description = "Security group for console ALB accesss internally"
-  vpc_id      = "${var.vpc_id}"
-
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 8001
-    to_port     = 8001
-    protocol    = "tcp"
-    cidr_blocks = ["${data.aws_vpc.selected_vpc.cidr_block}"]
-  }
-
-  ingress {
-    from_port   = 8002
-    to_port     = 8002
-    protocol    = "tcp"
-    cidr_blocks = ["${data.aws_vpc.selected_vpc.cidr_block}"]
-  }
-
-  # This is for outbound internet access
-  egress {
-    from_port   = 0
-    to_port     = 65535
-    protocol    = "-1"
-    cidr_blocks = ["${data.aws_vpc.selected_vpc.cidr_block}"]
-  }
-}
-
 #Security group for the instances themselves
 resource "aws_security_group" "kong_instances" {
   name        = "${var.tag_name}-sg"
@@ -133,39 +43,107 @@ resource "aws_security_group" "kong_instances" {
   }
 }
 
+#Load the launch config with the templated userdata to start kong
+resource "aws_launch_configuration" "kong_lc" {
+  name_prefix     = "${var.tag_name}-"
+  image_id        = "${lookup(var.ami, var.region)}"
+  instance_type   = "${var.instance_type}"
+  security_groups = ["${aws_security_group.kong_instances.id}"]
+  user_data       = "${data.template_file.kong_config.rendered}"
+  key_name        = "${var.key_name}"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_security_group_rule" "external_allow_https" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${var.public_alb_sg}"
+}
+
+resource "aws_security_group_rule" "external_allow_http" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${var.public_alb_sg}"
+}
+
+resource "aws_security_group_rule" "internal_allow_https" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${var.private_alb_sg}"
+}
+
+resource "aws_security_group_rule" "internal_allow_http" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${var.private_alb_sg}"
+}
+
+resource "aws_security_group_rule" "internal_allow_admin" {
+  type              = "ingress"
+  from_port         = 8001
+  to_port           = 8001
+  protocol          = "tcp"
+  cidr_blocks       = ["${data.aws_vpc.selected_vpc.cidr_block}"]
+  security_group_id = "${var.private_alb_sg}"
+}
+
+resource "aws_security_group_rule" "internal_allow_admin_secure" {
+  type              = "ingress"
+  from_port         = 8002
+  to_port           = 8002
+  protocol          = "tcp"
+  cidr_blocks       = ["${data.aws_vpc.selected_vpc.cidr_block}"]
+  security_group_id = "${var.private_alb_sg}"
+}
+
 #Setup target groups
-resource "aws_alb_target_group" "tf_alb_http" {
+resource "aws_alb_target_group" "external_http_target_group" {
   name     = "tf-${var.tag_name}-alb-http"
   port     = 8000
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
 
   health_check {
-    path = "/cluster"
+    path = "/status"
     port = 8001
   }
 }
 
-resource "aws_alb_target_group" "tf_alb_admin" {
+resource "aws_alb_target_group" "internal_admin_target_group" {
   name     = "tf-${var.tag_name}-alb-admin"
   port     = 8001
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
 
   health_check {
-    path = "/cluster"
+    path = "/status"
     port = 8001
   }
 }
 
-resource "aws_alb_target_group" "tf_alb_internal" {
+resource "aws_alb_target_group" "internal_http_target_group" {
   name     = "tf-${var.tag_name}-alb-internal"
   port     = 8000
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
 
   health_check {
-    path = "/cluster"
+    path = "/status"
     port = 8001
   }
 }
@@ -178,29 +156,29 @@ resource "aws_alb_listener" "front_end_https" {
   certificate_arn   = "${var.ssl_certificate_id}"
 
   default_action {
-    target_group_arn = "${aws_alb_target_group.tf_alb_http.arn}"
+    target_group_arn = "${aws_alb_target_group.external_http_target_group.arn}"
     type             = "forward"
   }
 }
 
 resource "aws_alb_listener" "front_end_http" {
-  load_balancer_arn = "${aws_alb.kong-alb.arn}"
+  load_balancer_arn = "${var.public_alb_arn}"
   port              = "80"
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = "${aws_alb_target_group.tf_alb_http.arn}"
+    target_group_arn = "${aws_alb_target_group.external_http_target_group.arn}"
     type             = "forward"
   }
 }
 
-resource "aws_alb_listener" "front_end_https_internal" {
+resource "aws_alb_listener" "front_end_http_internal" {
   load_balancer_arn = "${var.private_alb_arn}"
   port              = 80
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = "${aws_alb_target_group.tf_alb_internal.arn}"
+    target_group_arn = "${aws_alb_target_group.internal_http_target_group.arn}"
     type             = "forward"
   }
 }
@@ -213,7 +191,7 @@ resource "aws_alb_listener" "front_end_https_admin" {
   certificate_arn   = "${var.ssl_certificate_id}"
 
   default_action {
-    target_group_arn = "${aws_alb_target_group.tf_alb_admin.arn}"
+    target_group_arn = "${aws_alb_target_group.internal_admin_target_group.arn}"
     type             = "forward"
   }
 }
@@ -224,7 +202,7 @@ resource "aws_alb_listener" "front_end_http_admin" {
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = "${aws_alb_target_group.tf_alb_admin.arn}"
+    target_group_arn = "${aws_alb_target_group.internal_admin_target_group.arn}"
     type             = "forward"
   }
 }

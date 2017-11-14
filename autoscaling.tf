@@ -6,7 +6,7 @@ resource "aws_autoscaling_group" "kong_asg" {
   desired_capacity     = "${var.min_cluster_size}"
   force_delete         = true
   vpc_zone_identifier  = ["${var.alb_subnets_private}"]
-  target_group_arns    = ["${var.target_groups}"]
+  target_group_arns    = ["${aws_alb_target_group.tf_alb_http.arn}", "${aws_alb_target_group.tf_alb_admin.arn}", "${aws_alb_target_group.tf_alb_internal.arn}"]
 
   tag {
     key                 = "Name"
