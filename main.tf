@@ -23,7 +23,7 @@ resource "aws_security_group" "kong_instances" {
     from_port       = 8001
     to_port         = 8001
     protocol        = "tcp"
-    security_groups = ["${var.private_alb_sg}"]
+    security_groups = ["${var.private_alb_sg}", "${var.public_alb_sg}"]
   }
 
   // These are for maintenance
