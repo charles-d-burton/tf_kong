@@ -25,7 +25,7 @@ EOF
 #Install the Kong config
 mkdir -p /etc/kong/
 cat << 'EOF' > /etc/kong/kong.conf
-database = kong
+database = postgres
 pg_host = ${pg_host}
 pg_port = 5432
 pg_password = ${pg_pass}
