@@ -44,6 +44,7 @@ variable "vpc_id" {
 
 variable "private_subnets" {
   description = "List of subnets to launch instances into"
+  type        = "list"
 }
 
 variable "private_alb_arn" {
