@@ -112,10 +112,10 @@ resource "aws_security_group_rule" "internal_allow_admin_secure" {
 }
 
 #Setup target groups
-resource "aws_alb_target_group" "external_http_target_group" {
-  name        = "${var.tag_name}-alb-http"
+resource "aws_alb_target_group" "external_tcp_target_group" {
+  name        = "${var.tag_name}-alb-tcp"
   port        = 8000
-  protocol    = "HTTP"
+  protocol    = "TCP"
   vpc_id      = "${var.vpc_id}"
   target_type = "ip"
 
