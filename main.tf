@@ -113,10 +113,11 @@ resource "aws_security_group_rule" "internal_allow_admin_secure" {
 
 #Setup target groups
 resource "aws_alb_target_group" "external_http_target_group" {
-  name     = "${var.tag_name}-alb-http"
-  port     = 8000
-  protocol = "HTTP"
-  vpc_id   = "${var.vpc_id}"
+  name        = "${var.tag_name}-alb-http"
+  port        = 8000
+  protocol    = "HTTP"
+  vpc_id      = "${var.vpc_id}"
+  target_type = "ip"
 
   health_check {
     path    = "/status"
