@@ -67,7 +67,8 @@ variable "public_alb_sg" {
 } */
 
 variable "ssl_certificate_id" {}
-variable "cloudfront_cert" {}
+
+#variable "cloudfront_cert" {}
 
 variable "pg_pass" {}
 
@@ -77,7 +78,7 @@ variable "notification_arn" {
 
 #Cluster variables to set the minimum and maximum cluster size
 variable "min_cluster_size" {
-  description = "The number of Consul servers to launch."
+  description = "The number of servers to launch."
   default     = 2
 }
 
