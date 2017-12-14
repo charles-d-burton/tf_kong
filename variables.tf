@@ -47,6 +47,11 @@ variable "private_subnets" {
   type        = "list"
 }
 
+variable "public_subnets" {
+  description = "List of public subnet to place instances"
+  type        = "list"
+}
+
 variable "private_alb_arn" {
   description = "The ALB to serve the admin interface"
 }
