@@ -10,9 +10,10 @@ output "asg_name" {
   value = "${aws_autoscaling_group.kong_asg.id}"
 }
 
-output "kong_admin_alb" {
+/* output "kong_admin_alb" {
   value = "${aws_alb.kong_internal_alb.dns_name}"
-}
+} */
+
 
 /* output "kong_frontend_alb" {
   value = "${aws_alb.kong-alb.dns_name}"
