@@ -113,14 +113,14 @@ resource "aws_security_group_rule" "internal_allow_admin_secure" {
 
 #Setup target groups
 resource "aws_alb_target_group" "external_http_target_group" {
-  name     = "tf-${var.tag_name}-alb-http"
+  name     = "${var.tag_name}-alb-http"
   port     = 8000
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
 }
 
 resource "aws_alb_target_group" "internal_admin_target_group" {
-  name     = "tf-${var.tag_name}-alb-admin"
+  name     = "${var.tag_name}-alb-admin"
   port     = 8001
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
@@ -133,7 +133,7 @@ resource "aws_alb_target_group" "internal_admin_target_group" {
 }
 
 resource "aws_alb_target_group" "internal_http_target_group" {
-  name     = "tf-${var.tag_name}-alb-internal"
+  name     = "${var.tag_name}-alb-internal"
   port     = 8000
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
