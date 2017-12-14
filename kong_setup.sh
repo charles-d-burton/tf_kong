@@ -83,4 +83,5 @@ EOF
 echo "cluster_advertise = $IP_ADDR:7946" >> /etc/kong/kong.conf
 service cassandra stop
 rm /usr/local/kong/serf/serf.id
-su - ec2-user -c "kong start -c /etc/kong/kong.conf --nginx-conf /etc/kong/nginx.template"
+kong migrations up
+kong start -c /etc/kong/kong.conf --nginx-conf /etc/kong/nginx.template
