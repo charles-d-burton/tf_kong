@@ -33,7 +33,7 @@ resource "aws_db_instance" "kong_db" {
   username               = "kong"
   password               = "${var.pg_pass}"
   db_subnet_group_name   = "${aws_db_subnet_group.kong_db_subnet_group.name}"
-  vpc_security_group_ids = "${aws_security_group.kong_sg.id}"
+  vpc_security_group_ids = ["${aws_security_group.kong_sg.id}"]
 }
 
 resource "aws_db_subnet_group" "kong_db_subnet_group" {

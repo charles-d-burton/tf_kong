@@ -28,8 +28,8 @@ resource "aws_iam_role" "kong" {
 } */
 
 resource "aws_iam_instance_profile" "kong_instance_profile" {
-  name  = "${var.tag_name}-instance-profile-${var.region}"
-  roles = ["${aws_iam_role.kong.name}"]
+  name = "${var.tag_name}-instance-profile-${var.region}"
+  role = "${aws_iam_role.kong.name}"
 }
 
 #Policies for lambda invocation
