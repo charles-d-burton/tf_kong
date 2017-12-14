@@ -1,5 +1,5 @@
 resource "aws_security_group" "kong_sg" {
-  name        = "tf_kong_sg"
+  name        = "tf_kong_postgres_sg"
   description = "Allow inbound traffic to kong"
   vpc_id      = "${var.vpc_id}"
 
@@ -7,7 +7,7 @@ resource "aws_security_group" "kong_sg" {
     from_port       = "5432"
     to_port         = "5432"
     protocol        = "TCP"
-    security_groups = ["${aws_security_group.kong_instances.name}"]
+    security_groups = ["${aws_security_group.kong_instances.id}"]
   }
 
   egress {
@@ -15,6 +15,10 @@ resource "aws_security_group" "kong_sg" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags {
+    Name = "tf_kong_postgres_sg"
   }
 }
 
