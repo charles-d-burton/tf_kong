@@ -2,7 +2,7 @@ resource "aws_autoscaling_group" "kong_asg" {
   name                 = "${var.tag_name}-asg"
   launch_configuration = "${aws_launch_configuration.kong_lc.name}"
   max_size             = "${var.max_cluster_size}"
-  min_size             = "${var.min_cluseter_size}"
+  min_size             = "${var.min_cluster_size}"
   desired_capacity     = "${var.min_cluster_size}"
   force_delete         = true
   vpc_zone_identifier  = ["${var.alb_subnets_private}"]
