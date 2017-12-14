@@ -1,5 +1,5 @@
 output "security_group" {
-  value = "${aws_security_group.kong.id}"
+  value = "${aws_security_group.kong_instances.id}"
 }
 
 output "launch_configuration" {
@@ -11,9 +11,10 @@ output "asg_name" {
 }
 
 output "kong_admin_alb" {
-  value = "${aws_alb.kong-internal-alb.dns_name}"
+  value = "${aws_alb.kong_internal_alb.dns_name}"
 }
 
-output "kong_frontend_alb" {
+/* output "kong_frontend_alb" {
   value = "${aws_alb.kong-alb.dns_name}"
-}
+} */
+

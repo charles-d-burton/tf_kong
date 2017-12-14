@@ -21,11 +21,11 @@ resource "aws_iam_role" "kong" {
   assume_role_policy = "${data.aws_iam_policy_document.kong_role.json}"
 }
 
-resource "aws_iam_policy_attachment" "kong" {
+/* resource "aws_iam_policy_attachment" "kong" {
   name       = "kong-${var.tag_name}-attachment"
   policy_arn = "${aws_iam_policy.kong.arn}"
   role       = "${aws_iam_role.kong.name}"
-}
+} */
 
 resource "aws_iam_instance_profile" "kong_instance_profile" {
   name  = "${var.tag_name}-instance-profile-${var.region}"
