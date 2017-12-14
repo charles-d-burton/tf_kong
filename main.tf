@@ -89,7 +89,7 @@ resource "aws_security_group_rule" "internal_allow_http" {
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = ["10.0.0.0/8"]
   security_group_id = "${var.private_alb_sg}"
 }
 
@@ -119,8 +119,9 @@ resource "aws_alb_target_group" "external_http_target_group" {
   vpc_id   = "${var.vpc_id}"
 
   health_check {
-    path = "/status"
-    port = 8001
+    path    = "/status"
+    port    = 8001
+    matcher = 200
   }
 }
 
@@ -131,8 +132,9 @@ resource "aws_alb_target_group" "internal_admin_target_group" {
   vpc_id   = "${var.vpc_id}"
 
   health_check {
-    path = "/status"
-    port = 8001
+    path    = "/status"
+    port    = 8001
+    matcher = 200
   }
 }
 
@@ -143,8 +145,9 @@ resource "aws_alb_target_group" "internal_http_target_group" {
   vpc_id   = "${var.vpc_id}"
 
   health_check {
-    path = "/status"
-    port = 8001
+    path    = "/status"
+    port    = 8001
+    matcher = 200
   }
 }
 
