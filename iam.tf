@@ -17,18 +17,18 @@ data "aws_iam_policy_document" "kong_role" {
 }
 
 resource "aws_iam_role" "kong" {
-  name               = "${var.tagName}-role-${var.region}"
+  name               = "${var.tag_name}-role-${var.region}"
   assume_role_policy = "${data.aws_iam_policy_document.kong_role.json}"
 }
 
 resource "aws_iam_policy_attachment" "kong" {
-  name       = "kong-${var.tagName}-attachment"
+  name       = "kong-${var.tag_name}-attachment"
   policy_arn = "${aws_iam_policy.kong.arn}"
   role       = "${aws_iam_role.kong.name}"
 }
 
-resource "aws_iam_instance_profile" "kong-instance-profile" {
-  name  = "kong-${var.tagName}-instance-profile-${var.region}"
+resource "aws_iam_instance_profile" "kong_instance_profile" {
+  name  = "${var.tag_name}-instance-profile-${var.region}"
   roles = ["${aws_iam_role.kong.name}"]
 }
 
