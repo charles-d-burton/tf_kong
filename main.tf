@@ -119,9 +119,9 @@ resource "aws_alb_target_group" "external_http_target_group" {
   vpc_id   = "${var.vpc_id}"
 
   health_check {
-    path    = "/status"
-    port    = 8001
-    matcher = 200
+    path    = "/"
+    port    = 8000
+    matcher = 404
   }
 }
 
