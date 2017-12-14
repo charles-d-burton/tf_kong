@@ -1,5 +1,4 @@
 #!/bin/bash
-su - ec2-user -c "kong stop"
 export IP_ADDR=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
 wget https://bintray.com/kong/kong-community-edition-aws/download_file\?file_path\=dists/kong-community-edition-0.11.1.aws.rpm -O kong.rpm
 yum install -y epel-release
@@ -80,8 +79,5 @@ http {
 }
 EOF
 
-echo "cluster_advertise = $IP_ADDR:7946" >> /etc/kong/kong.conf
-service cassandra stop
-rm /usr/local/kong/serf/serf.id
 kong migrations up
 kong start -c /etc/kong/kong.conf --nginx-conf /etc/kong/nginx.template
