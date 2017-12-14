@@ -30,8 +30,9 @@ pg_port = 5432
 pg_password = ${pg_pass}
 pg_database = ${pg_db}
 pg_user = ${pg_user}
-cluster_listen = 0.0.0.0:7946
 server_tokens = off
+prefix=/home/ec2-user/kong
+
 EOF
 
 cat << 'EOF' > /etc/kong/nginx.template
@@ -79,5 +80,5 @@ http {
 }
 EOF
 
-kong migrations up
-kong start -c /etc/kong/kong.conf --nginx-conf /etc/kong/nginx.template
+su - ec2-user -c "kong migrations up"
+su - ec2-user -c "kong start -c /etc/kong/kong.conf --nginx-conf /etc/kong/nginx.template"
