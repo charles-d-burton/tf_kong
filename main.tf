@@ -117,12 +117,6 @@ resource "aws_alb_target_group" "external_http_target_group" {
   port     = 8000
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
-
-  health_check {
-    path    = "/"
-    port    = 8000
-    matcher = 404
-  }
 }
 
 resource "aws_alb_target_group" "internal_admin_target_group" {
