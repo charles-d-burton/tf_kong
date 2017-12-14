@@ -16,7 +16,7 @@ resource "aws_security_group" "kong_instances" {
     from_port       = 8000
     to_port         = 8000
     protocol        = "tcp"
-    security_groups = ["${var.private_alb_sg}"]
+    security_groups = ["${var.private_alb_sg}", "${var.public_alb_sg}"]
   }
 
   ingress {
