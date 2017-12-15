@@ -127,11 +127,10 @@ resource "aws_alb_target_group" "external_http_target_group" {
 }
 
 resource "aws_alb_target_group" "internal_admin_target_group" {
-  name        = "${var.tag_name}-alb-admin"
-  port        = 8001
-  protocol    = "HTTP"
-  vpc_id      = "${var.vpc_id}"
-  target_type = "ip"
+  name     = "${var.tag_name}-alb-admin"
+  port     = 8001
+  protocol = "HTTP"
+  vpc_id   = "${var.vpc_id}"
 
   health_check {
     path    = "/status"
@@ -141,11 +140,10 @@ resource "aws_alb_target_group" "internal_admin_target_group" {
 }
 
 resource "aws_alb_target_group" "internal_http_target_group" {
-  name        = "${var.tag_name}-alb-internal"
-  port        = 8000
-  protocol    = "HTTP"
-  vpc_id      = "${var.vpc_id}"
-  target_type = "ip"
+  name     = "${var.tag_name}-alb-internal"
+  port     = 8000
+  protocol = "HTTP"
+  vpc_id   = "${var.vpc_id}"
 
   health_check {
     path    = "/status"
