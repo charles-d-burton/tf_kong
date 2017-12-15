@@ -115,28 +115,28 @@ resource "aws_security_group_rule" "internal_allow_admin_secure" {
 resource "aws_alb_target_group" "external_http_target_group" {
   name        = "${var.tag_name}-alb-tcp"
   port        = 8000
-  protocol    = "HTTP"
+  protocol    = "TCP"
   vpc_id      = "${var.vpc_id}"
   target_type = "ip"
+
+  /*  health_check {
+    path    = "/status"
+    port    = 8001
+    matcher = 200
+  } */
+}
+
+resource "aws_alb_target_group" "internal_admin_target_group" {
+  name     = "${var.tag_name}-alb-admin"
+  port     = 8001
+  protocol = "HTTP"
+  vpc_id   = "${var.vpc_id}"
 
   health_check {
     path    = "/status"
     port    = 8001
     matcher = 200
   }
-}
-
-resource "aws_alb_target_group" "internal_admin_target_group" {
-  name     = "${var.tag_name}-alb-admin"
-  port     = 8001
-  protocol = "TCP"
-  vpc_id   = "${var.vpc_id}"
-
-  /* health_check {
-    path    = "/status"
-    port    = 8001
-    matcher = 200
-  } */
 }
 
 resource "aws_alb_target_group" "internal_http_target_group" {
