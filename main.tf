@@ -66,14 +66,14 @@ resource "aws_security_group_rule" "external_allow_https" {
   security_group_id = "${var.public_alb_sg}"
 }
 
-/* resource "aws_security_group_rule" "external_allow_http" {
+resource "aws_security_group_rule" "external_allow_http" {
   type              = "ingress"
   from_port         = 80
   to_port           = 80
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${var.public_alb_sg}"
-} */
+}
 
 resource "aws_security_group_rule" "internal_allow_https" {
   type              = "ingress"
