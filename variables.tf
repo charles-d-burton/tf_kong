@@ -5,7 +5,7 @@ variable "ami" {
   default = {
     us-west-1      = "ami-02eada62"
     us-west-2      = "ami-e689729e"
-    us-east-1      = "ami-8c1be5f6"
+    us-east-1      = "ami-55ef662f"
     us-east-2      = "ami-c5062ba0"
     sa-east-1      = "ami-f1344b9d"
     eu-west-1      = "ami-acd005d5"
