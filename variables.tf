@@ -20,6 +20,18 @@ variable "ami" {
   }
 }
 
+variable "ubuntu_ami_name" {
+  type = "String"
+  description = "The name of the ubuntu ami to pull from"
+  default = "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"
+}
+
+variable "amazon_ami_name" {
+  type = "String"
+  description = "The name of the Amazon Linux ami to pull from"
+  default = "amzn-ami-hvm-*-x86_64-gp2"
+}
+
 variable "key_name" {
   description = "The SSH key to use"
 }
