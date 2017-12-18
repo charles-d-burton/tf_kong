@@ -21,13 +21,13 @@ variable "ami" {
 }
 
 variable "ubuntu_ami_name" {
-  type = "String"
+  type = "string"
   description = "The name of the ubuntu ami to pull from"
   default = "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"
 }
 
 variable "amazon_ami_name" {
-  type = "String"
+  type = "string"
   description = "The name of the Amazon Linux ami to pull from"
   default = "amzn-ami-hvm-*-x86_64-gp2"
 }
