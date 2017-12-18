@@ -30,7 +30,7 @@ data "aws_ami" "ubuntu" {
     owners = ["099720109477"] # Canonical
 }
 
-#Get the latest ubuntu ami
+#Get the latest amazon linux ami
 data "aws_ami" "amazon" {
     most_recent = true
 
