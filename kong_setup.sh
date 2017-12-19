@@ -10,15 +10,17 @@ cat << 'EOF' > /etc/security/limits.d/90-nginx.conf
 *	hard nofile 4096
 EOF
 
-#cat << 'EOF' > /etc/sysctl.d/90-nginx.conf
-#net.core.somaxconn = 65536
-#net.ipv4.tcp_max_tw_buckets = 1440000
-#net.ipv4.ip_local_port_range = 1024 65000
-#net.ipv4.tcp_fin_timeout = 15
-#net.ipv4.tcp_window_scaling = 1
-#net.ipv4.tcp_max_syn_backlog = 3240000
-#EOF
+#Network performance tuning
+cat << 'EOF' > /etc/sysctl.d/90-nginx.conf
+net.core.somaxconn = 65536
+net.ipv4.tcp_max_tw_buckets = 1440000
+net.ipv4.ip_local_port_range = 1024 65000
+net.ipv4.tcp_fin_timeout = 15
+net.ipv4.tcp_window_scaling = 1
+net.ipv4.tcp_max_syn_backlog = 3240000
+EOF
 
+#Reload the tuned params
 /sbin/sysctl -p
 
 #Install the Kong config
@@ -35,6 +37,7 @@ prefix=/home/ec2-user/kong
 
 EOF
 
+#Custom NGINX Template for improved performance
 cat << 'EOF' > /etc/kong/nginx.template
 # ---------------------
 # custom_nginx.template
@@ -80,5 +83,8 @@ http {
 }
 EOF
 
+#Run the Kong database migrations
 su - ec2-user -c "kong migrations up"
+
+#Start kong
 su - ec2-user -c "kong start -c /etc/kong/kong.conf --nginx-conf /etc/kong/nginx.template"
