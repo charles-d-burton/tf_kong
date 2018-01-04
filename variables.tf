@@ -1,13 +1,13 @@
 variable "ubuntu_ami_name" {
-  type = "string"
+  type        = "string"
   description = "The name of the ubuntu ami to pull from"
-  default = "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"
+  default     = "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"
 }
 
 variable "amazon_ami_name" {
-  type = "string"
+  type        = "string"
   description = "The name of the Amazon Linux ami to pull from"
-  default = "amzn-ami-hvm-*-x86_64-gp2"
+  default     = "amzn-ami-hvm-*-x86_64-gp2"
 }
 
 variable "key_name" {
@@ -81,4 +81,12 @@ variable "min_cluster_size" {
 variable "max_cluster_size" {
   description = "The maximum number of nodes"
   default     = 5
+}
+
+#Variable to allow other subnets inbound on the admin interfaces
+
+variable "admin_inbound_cidr" {
+  type        = "list"
+  description = "List of additional CIDR blocks to allow to connect to the admin interface"
+  default     = []
 }

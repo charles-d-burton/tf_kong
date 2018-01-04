@@ -98,7 +98,7 @@ resource "aws_security_group_rule" "internal_allow_admin" {
   from_port         = 8001
   to_port           = 8001
   protocol          = "tcp"
-  cidr_blocks       = ["${data.aws_vpc.selected_vpc.cidr_block}"]
+  cidr_blocks       = ["${data.aws_vpc.selected_vpc.cidr_block}", "${var.admin_inbound_cidr}"]
   security_group_id = "${var.private_alb_sg}"
 }
 
@@ -107,7 +107,7 @@ resource "aws_security_group_rule" "internal_allow_admin_secure" {
   from_port         = 8002
   to_port           = 8002
   protocol          = "tcp"
-  cidr_blocks       = ["${data.aws_vpc.selected_vpc.cidr_block}"]
+  cidr_blocks       = ["${data.aws_vpc.selected_vpc.cidr_block}", "${var.admin_inbound_cidr}"]
   security_group_id = "${var.private_alb_sg}"
 }
 
