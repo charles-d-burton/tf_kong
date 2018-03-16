@@ -45,12 +45,13 @@ resource "aws_security_group" "kong_instances" {
 
 #Load the launch config with the templated userdata to start kong
 resource "aws_launch_configuration" "kong_lc" {
-  name_prefix     = "${var.tag_name}-"
-  image_id        = "${data.aws_ami.amazon.id}"
-  instance_type   = "${var.instance_type}"
-  security_groups = ["${aws_security_group.kong_instances.id}"]
-  user_data       = "${data.template_file.kong_config.rendered}"
-  key_name        = "${var.key_name}"
+  name_prefix          = "${var.tag_name}-"
+  image_id             = "${data.aws_ami.amazon.id}"
+  instance_type        = "${var.instance_type}"
+  security_groups      = ["${aws_security_group.kong_instances.id}"]
+  user_data            = "${data.template_file.kong_config.rendered}"
+  key_name             = "${var.key_name}"
+  iam_instance_profile = "${aws_iam_instance_profile.kong_instance_profile.name}"
 
   lifecycle {
     create_before_destroy = true
