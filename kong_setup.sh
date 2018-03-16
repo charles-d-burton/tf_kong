@@ -6,6 +6,11 @@ yum install -y kong.rpm --nogpgcheck
 
 #Setup AWSLOGS
 cat <<'EOF' > /etc/awslogs/awslogs.conf
+[general]
+# Path to the CloudWatch Logs agent's state file. The agent uses this file to maintain
+# client side state across its executions.
+state_file = /var/lib/awslogs/agent-state
+
 [/home/ec2-user/kong/logs/access.log]
 datetime_format = %b %d %H:%M:%S
 file = /home/ec2-user/kong/logs/access.log
