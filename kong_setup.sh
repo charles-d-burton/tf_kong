@@ -34,6 +34,7 @@ pg_database = ${pg_db}
 pg_user = ${pg_user}
 server_tokens = off
 prefix=/home/ec2-user/kong
+admin_listen=0.0.0.0:8001
 
 EOF
 
