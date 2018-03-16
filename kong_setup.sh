@@ -4,6 +4,35 @@ wget https://bintray.com/kong/kong-community-edition-aws/download_file\?file_pat
 yum install -y epel-release awslogs
 yum install -y kong.rpm --nogpgcheck
 
+#Setup AWSLOGS
+cat <<'EOF' > /etc/awslogs/awslogs.conf
+[/home/ec2-user/kong/logs/access.log]
+datetime_format = %b %d %H:%M:%S
+file = /home/ec2-user/kong/logs/access.log
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = ${log_group}
+
+[/home/ec2-user/kong/logs/error.log]
+datetime_format = %b %d %H:%M:%S
+file = /home/ec2-user/kong/logs/error.log
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = ${log_group}
+
+[/home/ec2-user/kong/logs/request.log]
+datetime_format = %b %d %H:%M:%S
+file = /home/ec2-user/kong/logs/request.log
+buffer_duration = 5000
+log_stream_name = {instance_id}
+initial_position = start_of_file
+log_group_name = ${log_group}
+EOF
+
+service awslogs start
+
 #Increase limits
 cat << 'EOF' > /etc/security/limits.d/90-nginx.conf
 *	soft nofile 4096
