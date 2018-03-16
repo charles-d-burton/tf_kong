@@ -90,3 +90,43 @@ variable "admin_inbound_cidr" {
   description = "List of additional CIDR blocks to allow to connect to the admin interface"
   default     = []
 }
+
+#WLogging variables
+variable "enable_log_forwarding" {
+  description = "Whether or not to enable log forwarding"
+  default     = true
+}
+
+variable "log_group_path" {
+  description = "The path to create the log stream in"
+  type        = "string"
+  default     = "/aws/ec2"
+}
+
+variable "service_name" {
+  description = "the name of the service"
+  type        = "string"
+  default     = "kong"
+}
+
+variable "max_log_retention" {
+  description = "The number of days to keep logs"
+  default     = 7
+}
+
+variable "filter_pattern" {
+  description = "A pattern to filter logs fowarded to lambda"
+  default     = ""
+}
+
+variable "log_forwarding_arn" {
+  description = "The ARN of the lambda function to forward logs to"
+  type        = "string"
+  default     = ""
+}
+
+variable "log_forwarding_name" {
+  description = "The name of the function to forward logs"
+  type        = "string"
+  default     = ""
+}
