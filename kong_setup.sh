@@ -4,6 +4,18 @@ wget https://bintray.com/kong/kong-community-edition-aws/download_file\?file_pat
 yum install -y epel-release awslogs
 yum install -y kong.rpm --nogpgcheck
 
+#Setup Logrotate
+cat <<'EOF' > /etc/logrotate.d/kong
+/home/ec2-user/kong/logs/*.log {
+  copytruncate
+  compress
+  missingok
+  daily
+  rotate 3
+  maxage 30
+}
+EOF
+
 #Setup AWSLOGS
 cat <<'EOF' > /etc/awslogs/awslogs.conf
 [general]
