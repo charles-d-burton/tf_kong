@@ -28,4 +28,12 @@ $terraform apply
 ```
 
 ## Details
+
+### Cluster
 This will create a Kong cluster configured to run on an Amazon Linux AMI.  The default scaling parameters are as few as 2 nodes and as many as 5 nodes.  When the apply is finished you will have a Kong cluster with the admin port set to 8002 exposed on the internal load balancer.  Any parameters inside the launch configuration block and be non-destructively configured.  Simply change the associated variable and apply.  Once it completes manually reboot a single node at a time to make the change take effect.  This allows for zero downtime deploys.
+
+### Autoscaling
+The cluster is configured to scale on CPU utilization.
+
+### Logging
+The `kong_setup.sh` contains installs the awslogging agent.  The terraform sets up and configures logging to go to cloudwatch by default.  Additionally if file logging is configured via the Kong plugin you can send your `error`, `access`, and `request` logs to `/home/ec2-user/kong/logs` and have them appear in cloudwatch.
