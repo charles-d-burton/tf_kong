@@ -1,5 +1,5 @@
 resource "aws_security_group" "kong_sg" {
-  name        = "tf_kong_postgres_sg"
+  name        = "tf_kong_postgres_sg_${random_id.suffix.hex}"
   description = "Allow inbound traffic to kong"
   vpc_id      = "${var.vpc_id}"
 
@@ -37,7 +37,7 @@ resource "aws_db_instance" "kong_db" {
 }
 
 resource "aws_db_subnet_group" "kong_db_subnet_group" {
-  name       = "tf-kong-subnet-group"
+  name       = "tf-kong-subnet-group-${random_id.suffix.hex}"
   subnet_ids = ["${var.private_subnets}"]
 
   tags {

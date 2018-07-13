@@ -23,10 +23,6 @@ variable "instance_type" {
   default     = "t2.micro"
 }
 
-variable "tag_name" {
-  default = "tf-kong"
-}
-
 #Networking
 variable "vpc_id" {
   description = "VPC to place the cluster in"
@@ -106,7 +102,6 @@ variable "log_group_path" {
 variable "service_name" {
   description = "the name of the service"
   type        = "string"
-  default     = "kong"
 }
 
 variable "max_log_retention" {

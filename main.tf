@@ -1,6 +1,15 @@
+resource "random_id" "suffix" {
+  /*   keepers = {
+    # Generate a new id each time we switch to a new AMI id
+    spot_id = "${module.fleet.fleet_request_id[0]}"
+  } */
+
+  byte_length = 2
+}
+
 #Security group for the instances themselves
 resource "aws_security_group" "kong_instances" {
-  name        = "${var.tag_name}-sg"
+  name        = "${var.service_name}-sg"
   description = "Kong internal traffic and maintenance."
   vpc_id      = "${var.vpc_id}"
 
@@ -45,7 +54,7 @@ resource "aws_security_group" "kong_instances" {
 
 #Load the launch config with the templated userdata to start kong
 resource "aws_launch_configuration" "kong_lc" {
-  name_prefix          = "${var.tag_name}-"
+  name_prefix          = "${var.service_name}-"
   image_id             = "${data.aws_ami.amazon.id}"
   instance_type        = "${var.instance_type}"
   security_groups      = ["${aws_security_group.kong_instances.id}"]
@@ -114,7 +123,7 @@ resource "aws_security_group_rule" "internal_allow_admin_secure" {
 
 #Setup target groups
 resource "aws_alb_target_group" "external_http_target_group" {
-  name     = "${var.tag_name}-alb-public"
+  name     = "${var.service_name}-alb-public"
   port     = 8000
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
@@ -127,7 +136,7 @@ resource "aws_alb_target_group" "external_http_target_group" {
 }
 
 resource "aws_alb_target_group" "internal_admin_target_group" {
-  name     = "${var.tag_name}-alb-admin"
+  name     = "${var.service_name}-alb-admin"
   port     = 8001
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
@@ -140,7 +149,7 @@ resource "aws_alb_target_group" "internal_admin_target_group" {
 }
 
 resource "aws_alb_target_group" "internal_http_target_group" {
-  name     = "${var.tag_name}-alb-internal"
+  name     = "${var.service_name}-alb-internal"
   port     = 8000
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"

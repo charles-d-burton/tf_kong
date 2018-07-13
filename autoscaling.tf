@@ -1,5 +1,5 @@
 resource "aws_autoscaling_group" "kong_asg" {
-  name                 = "${var.tag_name}-asg"
+  name                 = "${var.service_name}-asg"
   launch_configuration = "${aws_launch_configuration.kong_lc.name}"
   max_size             = "${var.max_cluster_size}"
   min_size             = "${var.min_cluster_size}"
@@ -10,7 +10,7 @@ resource "aws_autoscaling_group" "kong_asg" {
 
   tag {
     key                 = "Name"
-    value               = "${var.tag_name}-${count.index}"
+    value               = "${var.service_name}-${count.index}"
     propagate_at_launch = "true"
   }
 
@@ -22,7 +22,7 @@ resource "aws_autoscaling_group" "kong_asg" {
 }
 
 resource "aws_autoscaling_policy" "kong_scale_up" {
-  name                   = "kong-scale-up"
+  name                   = "${var.service_name}-kong-scale-up"
   scaling_adjustment     = 2
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 300
@@ -30,7 +30,7 @@ resource "aws_autoscaling_policy" "kong_scale_up" {
 }
 
 resource "aws_autoscaling_policy" "kong_scale_down" {
-  name                   = "kong-scale-down"
+  name                   = "${var.service_name}-kong-scale-down"
   scaling_adjustment     = -1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 300
@@ -38,7 +38,7 @@ resource "aws_autoscaling_policy" "kong_scale_down" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cpu_high" {
-  alarm_name          = "kong-cpu-high"
+  alarm_name          = "${var.service_name}-kong-cpu-high"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
@@ -58,7 +58,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cpu_low" {
-  alarm_name          = "kong-cpu-low"
+  alarm_name          = "${var.service_name}-cpu-low"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"
@@ -78,7 +78,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_low" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "network_high" {
-  alarm_name          = "kong-network-high"
+  alarm_name          = "${var.service_name}-network-high"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "NetworkIn"
@@ -98,7 +98,7 @@ resource "aws_cloudwatch_metric_alarm" "network_high" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "network_low" {
-  alarm_name          = "kong-network-low"
+  alarm_name          = "${var.service_name}-kong-network-low"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "NetworkIn"
