@@ -1,6 +1,6 @@
 #!/bin/bash
 export IP_ADDR=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
-wget https://bintray.com/kong/kong-community-edition-aws/download_file\?file_path\=dists/kong-community-edition-0.12.3.aws.rpm -O kong.rpm
+wget https://bintray.com/kong/kong-community-edition-aws/download_file\?file_path\=dists/kong-community-edition-0.14.0.aws.rpm -O kong.rpm
 yum install -y epel-release awslogs
 yum install -y kong.rpm --nogpgcheck
 
